@@ -12,4 +12,23 @@
 </div>
 
 @section('scripts')
+<script>
+
+    if (!sessionStorage.getItem('firstVisit')) {
+        sessionStorage.setItem('firstVisit', '1');
+    }
+    else {
+        sessionStorage.setItem('firstVisit', '0');
+    }
+
+    if (sessionStorage.getItem('firstVisit') === "1") {
+        $(".loading").delay(1200).fadeOut(800);
+        $(".welcome").hide();
+        $(".welcome").delay(1500).fadeIn(800);
+    } else {
+        $(".loading").hide();
+        $(".welcome").show();
+    }
+
+</script>
 @endsection
