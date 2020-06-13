@@ -70,6 +70,28 @@ class UsersController extends Controller
      */
     public function update(UpdateProfileRequest $request, User $user)
     {
+        $user = auth()->user();
+        $data = $request->only(['name', 'about']);
+
+        if ($request->hasFile('avatar')) {
+            // delete old one
+            if ($user->avatar != NULL) {
+                unlink('storage/' . $user->avatar);
+            }
+            // upload it
+            $avatar = $request->avatar->store('', 'public');
+            $data['avatar'] = $avatar;
+        }
+
+        $user->update($data);
+        // $user->update([
+        //     'name' => $request->name,
+        //     'about' => $request->about,
+        //     'avatar' => $request->avatar
+        // ]);
+        
+        session()->flash('success', 'User updated successfully.');
+        return redirect()->back();
     }
 
     /**
@@ -80,13 +102,24 @@ class UsersController extends Controller
      */
     public function destroy(User $user)
     {
+        $user->delete();
+        session()->flash('success', 'Subject deleted successfully.');
+        return redirect(route('users.index'));
     }
 
     public function makeAdmin(User $user)
     {
+        $user->role = 'admin';
+        $user->save();
+        session()->flash('success', 'User made admin successfully.');
+        return redirect(route('users.index'));
     }
 
     public function makeTeacher(User $user)
     {
+        $user->role = 'teacher';
+        $user->save();
+        session()->flash('success', 'User made teacher successfully.');
+        return redirect(route('users.index'));
     }
 }
