@@ -1,7 +1,10 @@
 <?php
-namespace App\Http\Requests\Users;
+
+namespace App\Http\Requests\Courses;
+
 use Illuminate\Foundation\Http\FormRequest;
-class UpdateProfileRequest extends FormRequest
+
+class AddLessonsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +23,9 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'about' => 'required'
+            'title' => 'required',
+            'description' => 'required',
+            'course_id' => 'required'
         ];
     }
 }

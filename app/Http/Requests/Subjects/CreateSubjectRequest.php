@@ -1,7 +1,9 @@
 <?php
-namespace App\Http\Requests\Users;
+
+namespace App\Http\Requests\Subjects;
 use Illuminate\Foundation\Http\FormRequest;
-class UpdateProfileRequest extends FormRequest
+
+class CreateSubjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +22,7 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'about' => 'required'
+          'name' => 'required|unique:subjects'
         ];
     }
 }
