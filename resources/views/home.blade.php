@@ -10,6 +10,7 @@
     <a href="{{ url('/all-subjects') }}" class="boxed_btn_orange mr-4">Browse All Subjects</a>
     <a href="{{ url('/all-courses') }}" class="boxed_btn_orange">Browse All Courses</a>
 </div>
+@endsection
 
 @section('scripts')
 <script>
