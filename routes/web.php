@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/about', function () {
+    return view('about');
+});
+
 Route::any ( '/search', function () {
     $q = Input::get ( 'q' );
     $course = Course::where ( 'title', 'LIKE', '%' . $q . '%' )->get();
@@ -32,13 +36,20 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/all-subjects', 'SubjectsController@showAll')->name('all-subjects');
 Route::get('/all-courses', 'CoursesController@showAll')->name('all-courses');
+Route::get('/community', 'PostsController@index')->name('community');
+Route::get('/contact', 'ContactsController@index')->name('contact');
+Route::post('/add-lesson', 'CoursesController@addLesson')->name('courses.add-lesson');
 
 Route::resources([
-    'users' => 'UsersController',
-    'courses' => 'CoursesController',
     'subjects' => 'SubjectsController',
+    'courses' => 'CoursesController',
     'lessons' => 'LessonsController',
+    'users' => 'UsersController',
     'enrollments' => 'EnrollmentsController',
+    'posts' => 'PostsController',
+    'contacts' => 'ContactsController',
+    'votes' => 'VotesController',
+    'wallets' => 'WalletController'
 
 ]);
 
