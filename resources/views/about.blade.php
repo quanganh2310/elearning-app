@@ -21,8 +21,8 @@
                             </div>
                         </div>
                         <div class="master_name text-center">
-                            <h3>Dương Hải Nguyên</h3>
-                            <p>Coding with Heart</p>
+                            <h3>Phùng Thế Hùng</h3>
+                            <p>Girl Friend, Where are you?</p>
                         </div>
                     </div>
                 </div>
@@ -37,8 +37,8 @@
                             </div>
                         </div>
                         <div class="master_name text-center">
-                            <h3>Phan Quốc Toản</h3>
-                            <p>Ex-girlfriend is the best</p>
+                            <h3>Phùng Văn Tùng</h3>
+                            <p>none</p>
                         </div>
                     </div>
                 </div>
