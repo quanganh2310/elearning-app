@@ -22,7 +22,8 @@ class CoursesController extends Controller
      */
     public function index()
     {
-
+        $courses = Course::orderBy('created_at', 'desc')->paginate(8);
+        return view('courses.index')->with('courses', $courses);
     }
 
     /**
@@ -32,7 +33,10 @@ class CoursesController extends Controller
      */
     public function create()
     {
-
+        if (auth()->user()->isStudent()) {
+            return redirect(route('home'));
+        }
+        return view('courses.create')->with('subjects', Subject::all())->with('users', User::all());
     }
 
     /**
@@ -43,7 +47,22 @@ class CoursesController extends Controller
      */
     public function store(CreateCoursesRequest $request)
     {
-
+        $image = $request->image->store('','public');
+        $video = $request->video->store('','public');
+        // create new course
+        Course::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $image,
+            'video' => $video,
+            'cost' => $request->cost,
+            'subject_id' => $request->subject,
+            'teacher_id' => $request->teacher
+        ]);
+        // flash message
+        session()->flash('success', 'Courses created successfully.');
+        // redirect user
+        return redirect(route('courses.index'));
     }
 
     /**
@@ -54,7 +73,7 @@ class CoursesController extends Controller
      */
     public function show(Course $course)
     {
-
+        return view('courses.show')->with('course', $course)->with('votes', Votes::all());
     }
 
     /**
@@ -65,7 +84,10 @@ class CoursesController extends Controller
      */
     public function edit(Course $course)
     {
-
+        if (auth()->user()->isStudent()) {
+            return redirect(route('home'));
+        }
+        return view('courses.create')->with('course', $course)->with('subjects', Subject::all());
     }
 
     /**
@@ -77,7 +99,28 @@ class CoursesController extends Controller
      */
     public function update(UpdateCoursesRequest $request, Course $course)
     {
- 
+        $data = $request->only(['title', 'description', 'cost', 'published_at', 'subject_id']);
+        // check if new image
+        if ($request->hasFile('image')) {
+            // delete old one
+            unlink('storage/' . $course->image);
+            // upload it
+            $image = $request->image->store('', 'public');
+            $data['image'] = $image;
+        }
+        if ($request->hasFile('video')) {
+            // delete old one
+            unlink('storage/' . $course->video);
+            // upload it
+            $video = $request->video->store('', 'public');
+            $data['video'] = $video;
+        }
+        // update attributes
+        $course->update($data);
+        // flash message
+        session()->flash('success', 'Course updated successfully.');
+        // redirect user
+        return redirect(route('courses.index'));
     }
 
     /**
@@ -88,16 +131,37 @@ class CoursesController extends Controller
      */
     public function destroy(Course $course)
     {
-
+        // if ($course->lesson->count() > 0) {
+        //     session()->flash('success', 'Course cannot be deleted because it has some lesson.');
+        //     return redirect(route('courses.index'));
+        // }
+        unlink('storage/' . $course->image);
+        unlink('storage/' . $course->video);
+        $course->delete();
+        session()->flash('success', 'Course deleted successfully.');
+        return redirect(route('courses.index'));
     }
 
     public function showAll()
     {
- 
+        $courses = Course::orderBy('created_at', 'desc')->simplePaginate(6);
+        return view('courses.showAll')->with('courses', $courses);
     }
 
     public function addLesson(AddLessonsRequest $request)
     {
- 
+        if (auth()->user()->isStudent()) {
+            return redirect(route('home'));
+        }
+        Lesson::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'course_id' => $request->course_id
+        ]);
+
+        // flash message
+        session()->flash('success', 'Lesson created successfully.');
+        // redirect user
+        return redirect(route('courses.index'));
     }
 }
